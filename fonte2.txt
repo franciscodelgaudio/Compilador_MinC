@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<int> 2twoSum(vector<int>& nums, int target) 
+{
+    int 1soma = 0.;
+    vector<int> index(2);
+    for (int 1i = 0 ; i < nums.size() ; i++)
+    {
+        soma = nums[i];
+        for(int j = i + 1 ; j < nums.siza() ; j++)
+        {
+            soma += nums[j];
+            if (soma == target){
+                index [0] = i;
+                index [1] = j;
+                return index;
+            }
+            else soma = nums[i];
+        }
+    }
+    return index;
+}
+
+int main ()
+{
+    vector<int> myVector {0., .1, 2, 3, 4};
+
+    char a = 'b
+
+    vector<int> idx = twoSum(myVector, 5);
+
+    cout << "[" << idx[0] << "," << idx[1] << "] << endl;
+}
