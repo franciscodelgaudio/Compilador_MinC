@@ -1,7 +1,8 @@
 %{
 #include <stdio.h>
+#include <string.h>
 #include "lista.h"
-#include "parser.tab.h"
+#include "sintatico.tab.h"
 
 Lista * palavrasReservadas = NULL;
 Lista * simbolos = NULL;
@@ -17,7 +18,7 @@ int coluna = 1;
 
 %}
 
-PALAVRA_CHAVE (int|float|double|char|void|if|else|for|while|switch|case|cout|cin|endl|return)
+PALAVRA_CHAVE (int|float|double|char|void|if|else|for|while|return)
 IDENTIFICADOR [_a-zA-Z]+[_a-zA-Z0-9]*
 NUMERO_INTEIRO [\+\-]?[0-9]+
 NUMERO_REAL {NUMERO_INTEIRO}"."[0-9]+
@@ -25,6 +26,7 @@ OPERADOR_ARITMETICO [+\-*/%]
 OPERADOR_RELACIONAL (==|<=|>=|!=|>|<)
 OPERADOR_LOGICO (\|\||&&|!)
 OPERADOR_ATRIBUICAO (=)
+INCREMENTO (\+\+|\-\-)
 DELIMITADOR [\{\}\[\]\(\)]
 PONTUACAO (;|,|\.)
 STRING \"[^\"]*\"
@@ -42,77 +44,102 @@ CARACTERE_INVALIDO \'[^\']*\n
 {PALAVRA_CHAVE}         {
                             palavrasReservadas = Inserir(palavrasReservadas, PALAVRA_CHAVE, yytext, linha, coluna);
                             coluna += yyleng;
-                            if (!strcmp(yytext,"int"))    return T_INT;
-                            if (!strcmp(yytext,"float"))  return T_FLOAT;
-                            if (!strcmp(yytext,"double")) return T_DOUBLE;
-                            if (!strcmp(yytext,"char"))   return T_CHAR;
-                            if (!strcmp(yytext,"void"))   return T_VOID;
-                            if (!strcmp(yytext,"if"))   return T_IF;
-                            if (!strcmp(yytext,"else"))   return T_ELSE;
-                            if (!strcmp(yytext,"for"))   return T_FOR;
-                            if (!strcmp(yytext,"while"))   return T_WHILE;
-                            if (!strcmp(yytext,"switch"))   return T_SWITCH;
-                            if (!strcmp(yytext,"case"))   return T_CASE;
-                            if (!strcmp(yytext,"cout"))   return T_COUT;
-                            if (!strcmp(yytext,"cin"))   return T_CIN;
-                            if (!strcmp(yytext,"endl"))   return T_ENDL;
-                            if (!strcmp(yytext,"return"))   return T_RETURN;
+                            if (!strcmp(yytext,"int"))       return T_INT;
+                            if (!strcmp(yytext,"float"))     return T_FLOAT;
+                            if (!strcmp(yytext,"double"))    return T_DOUBLE;
+                            if (!strcmp(yytext,"char"))      return T_CHAR;
+                            if (!strcmp(yytext,"void"))      return T_VOID;
+                            if (!strcmp(yytext,"if"))        return T_IF;
+                            if (!strcmp(yytext,"else"))      return T_ELSE;
+                            if (!strcmp(yytext,"for"))       return T_FOR;
+                            if (!strcmp(yytext,"while"))     return T_WHILE;
+                            if (!strcmp(yytext,"return"))     return T_RETURN;
                         }
 {IDENTIFICADOR}         {
                             simbolos = Inserir(simbolos, IDENTIFICADOR, yytext, linha, coluna);
                             coluna += yyleng;
+                            yylval.sval = strdup(yytext);
+                            if (!strcmp(yytext,"main"))         return T_MAIN;
+                            if (!strcmp(yytext,"printf"))       return T_PRINTF;
+                            if (!strcmp(yytext,"scanf"))        return T_SCANF;
                             return T_IDENTIFICADOR;
                         }
 {NUMERO_INTEIRO}        {
                             simbolos = Inserir(simbolos, NUMERO_INTEIRO, yytext, linha, coluna);
                             coluna += yyleng;
+                            yylval.ival = atoi(yytext);
                             return T_NUMERO_INTEIRO;
                         }
 {NUMERO_REAL}           {
                             simbolos = Inserir(simbolos, NUMERO_REAL, yytext, linha, coluna);
                             coluna += yyleng;
+                            yylval.dval = atof(yytext);
                             return T_NUMERO_REAL;
                         }
 {OPERADOR_ARITMETICO}   {
                             palavrasReservadas = Inserir(palavrasReservadas, OPERADOR_ARITMETICO, yytext, linha, coluna);
                             coluna += yyleng;
-                            return *yytext;
+                            if (!strcmp(yytext,"+"))    return T_MAIS;
+                            if (!strcmp(yytext,"-"))    return T_MENOS;
+                            if (!strcmp(yytext,"*"))    return T_MULTI;
+                            if (!strcmp(yytext,"/"))    return T_DIV;
+                            if (!strcmp(yytext,"%"))    return T_MOD;
                         }
 {OPERADOR_RELACIONAL}   {
                             palavrasReservadas = Inserir(palavrasReservadas, OPERADOR_RELACIONAL, yytext, linha, coluna);
                             coluna += yyleng;
-                            if (!strcmp(yytext,">"))   return *yytext;
-                            if (!strcmp(yytext,"<"))   return *yytext;
-                            return T_OPERADOR_RELACIONAL;
+                            if (!strcmp(yytext,"=="))    return T_IGUAL;
+                            if (!strcmp(yytext,"<="))    return T_LE;
+                            if (!strcmp(yytext,">="))    return T_ME;
+                            if (!strcmp(yytext,"!="))    return T_DIF;
+                            if (!strcmp(yytext,">"))     return T_M;
+                            if (!strcmp(yytext,"<"))     return T_L;
+                        }
+{INCREMENTO}            {
+                            palavrasReservadas = Inserir(palavrasReservadas, INCREMENTO, yytext, linha, coluna); 
+                            coluna += yyleng;
+                            yylval.sval = strdup(yytext); 
+                            return T_INC;
                         }
 {OPERADOR_LOGICO}       {
                             palavrasReservadas = Inserir(palavrasReservadas, OPERADOR_LOGICO, yytext, linha, coluna);
                             coluna += yyleng;
-                            return T_OPERADOR_LOGICO;
+                            if (!strcmp(yytext,"||"))    return T_OR;
+                            if (!strcmp(yytext,"&&"))    return T_AND;
+                            if (!strcmp(yytext,"!"))     return T_NOT;
                         }
 {OPERADOR_ATRIBUICAO}   {
                             palavrasReservadas = Inserir(palavrasReservadas, OPERADOR_ATRIBUICAO, yytext, linha, coluna);
                             coluna += yyleng;
-                            return *yytext;
+                            return T_ATRIBUICAO;
                         }
 {DELIMITADOR}           {
                             palavrasReservadas = Inserir(palavrasReservadas, DELIMITADOR, yytext, linha, coluna);
                             coluna += yyleng;
-                            return *yytext; 
+                            if (!strcmp(yytext,"{"))    return T_ACHA;
+                            if (!strcmp(yytext,"}"))    return T_FCHA;
+                            if (!strcmp(yytext,"["))    return T_ACOL;
+                            if (!strcmp(yytext,"]"))    return T_FCOL;
+                            if (!strcmp(yytext,"("))    return T_APAR;
+                            if (!strcmp(yytext,")"))    return T_FPAR; 
                         }
 {PONTUACAO}             {
                             palavrasReservadas = Inserir(palavrasReservadas, PONTUACAO, yytext, linha, coluna);
                             coluna += yyleng;
-                            return *yytext;
+                            if (!strcmp(yytext,";"))    return T_PONTOVIRG;
+                            if (!strcmp(yytext,","))    return T_VIRG;
+                            if (!strcmp(yytext,"."))    return T_PONTO;
                         }
 {STRING}        {
                             simbolos = Inserir(simbolos, STRING, yytext, linha, coluna);
                             coluna += yyleng;
+                            yylval.sval = strdup(yytext);
                             return T_STRING;
                         }
 {CARACTERE}     {
                             simbolos = Inserir(simbolos, CARACTERE, yytext, linha, coluna);
                             coluna += yyleng;
+                            yylval.ival = yytext[1];
                             return T_CARACTERE;
                         }
 {COMENTARIO}            {
@@ -122,7 +149,8 @@ CARACTERE_INVALIDO \'[^\']*\n
 {MACROS}                {
                             palavrasReservadas = Inserir(palavrasReservadas, MACROS, yytext, linha, coluna);
                             coluna += yyleng;
-                            return T_MACRO;
+                            if (!strcmp(yytext,"#include"))     return T_INCLUDE;
+                            if (!strcmp(yytext,"#define"))      return T_DEFINE;
                         }
 {IDENTIFICADOR_INVALIDO}    {
                                 printf("Erro lexico [linha %d, coluna %d] %s malformado: %s\n", linha, coluna, "IDENTIFICADOR", yytext);
@@ -140,7 +168,6 @@ CARACTERE_INVALIDO \'[^\']*\n
                                 printf("Erro lexico [linha %d, coluna %d] %s malformado: %s", linha, coluna, "CARACTERE", yytext);
                                 coluna += yyleng;
                             }
-
 .                           {
                                 coluna += yyleng;
                             }

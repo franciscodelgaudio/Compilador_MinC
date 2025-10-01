@@ -1,34 +1,19 @@
-#include <iostream>
-#include <vector>
+#include <stdio.h>
+#define MAX 8
 
-using namespace std;
+void main() {
+   int i;
+   int acumulador = 0;
 
-vector<int> twoSum(vector<int>& nums, int target) 
-{
-    int soma = 0;
-    vector<int> index(2);
-    for (int i = 0 ; i < nums.size() ; i++)
-    {
-        soma = nums[i];
-        for(int j = i + 1 ; j < nums.size() ; j++)
-        {
-            soma += nums[j];
-            if (soma == target){
-                index [0] = i;
-                index [1] = j;
-                return index;
-            }
-            else soma = nums[i];
-        }
-    }
-    return index;
-}
+   for (i = 1; i <= MAX; i++) {
+      if (i % 2 == 0) {
+         acumulador = i;
+         print(acumulador);
+      } else {
+         scan(i);
+         "numero impar encontrado";
+      };
+   }
 
-int main ()
-{
-    vector<int> myVector {0, 1, 2, 3, 4};
-
-    vector<int> idx = twoSum(myVector, 5);
-
-    cout << "[" << idx[0] << "," << idx[1] << "]" << endl;
-}
+   return;
+};

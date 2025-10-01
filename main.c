@@ -1,16 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lista.h"
+#include "arvore.h"
 
 extern FILE *yyin;
 extern Lista *palavrasReservadas;
 extern Lista *simbolos;
+extern Pilha *p;
 
 extern int yyparse(void);
 extern int linha, coluna;
 
 int main (){
     char arquivo[100];
+    char saida[200];
     int c;
 
     printf("Digite o nome do arquivo: ");
@@ -23,6 +26,9 @@ int main (){
     }
 
     yyparse();
+
+    snprintf(saida, sizeof(saida), "arquivo_%s", arquivo);
+    imprimirPorNivel(saida, p->token);
     
     printf("0 - Sair\n");
     printf("1 - Imprimir lista de palavras reservadas\n");
@@ -55,6 +61,8 @@ int main (){
             } else {
                 palavrasReservadas = NULL;
                 simbolos = NULL;
+                p = NULL;
+                imprimirPorNivel("arquivo.txt", p->token);
                 yyparse();
             }
             break;

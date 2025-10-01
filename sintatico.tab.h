@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_PARSER_TAB_H_INCLUDED
-# define YY_YY_PARSER_TAB_H_INCLUDED
+#ifndef YY_YY_SINTATICO_TAB_H_INCLUDED
+# define YY_YY_SINTATICO_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -54,36 +54,69 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    T_INT = 258,                   /* T_INT  */
-    T_FLOAT = 259,                 /* T_FLOAT  */
-    T_DOUBLE = 260,                /* T_DOUBLE  */
-    T_CHAR = 261,                  /* T_CHAR  */
-    T_VOID = 262,                  /* T_VOID  */
-    T_IF = 263,                    /* T_IF  */
-    T_ELSE = 264,                  /* T_ELSE  */
-    T_FOR = 265,                   /* T_FOR  */
-    T_WHILE = 266,                 /* T_WHILE  */
-    T_SWITCH = 267,                /* T_SWITCH  */
-    T_CASE = 268,                  /* T_CASE  */
-    T_COUT = 269,                  /* T_COUT  */
-    T_CIN = 270,                   /* T_CIN  */
-    T_ENDL = 271,                  /* T_ENDL  */
+    T_IDENTIFICADOR = 258,         /* T_IDENTIFICADOR  */
+    T_NUMERO_INTEIRO = 259,        /* T_NUMERO_INTEIRO  */
+    T_NUMERO_REAL = 260,           /* T_NUMERO_REAL  */
+    T_STRING = 261,                /* T_STRING  */
+    T_CARACTERE = 262,             /* T_CARACTERE  */
+    T_INT = 263,                   /* T_INT  */
+    T_FLOAT = 264,                 /* T_FLOAT  */
+    T_DOUBLE = 265,                /* T_DOUBLE  */
+    T_CHAR = 266,                  /* T_CHAR  */
+    T_VOID = 267,                  /* T_VOID  */
+    T_IF = 268,                    /* T_IF  */
+    T_ELSE = 269,                  /* T_ELSE  */
+    T_FOR = 270,                   /* T_FOR  */
+    T_WHILE = 271,                 /* T_WHILE  */
     T_RETURN = 272,                /* T_RETURN  */
-    T_IDENTIFICADOR = 273,         /* T_IDENTIFICADOR  */
-    T_NUMERO_INTEIRO = 274,        /* T_NUMERO_INTEIRO  */
-    T_NUMERO_REAL = 275,           /* T_NUMERO_REAL  */
-    T_OPERADOR_RELACIONAL = 276,   /* T_OPERADOR_RELACIONAL  */
-    T_OPERADOR_LOGICO = 277,       /* T_OPERADOR_LOGICO  */
-    T_STRING = 278,                /* T_STRING  */
-    T_CARACTERE = 279,             /* T_CARACTERE  */
-    T_MACRO = 280                  /* T_MACRO  */
+    T_MAIN = 273,                  /* T_MAIN  */
+    T_PRINTF = 274,                /* T_PRINTF  */
+    T_SCANF = 275,                 /* T_SCANF  */
+    T_INCLUDE = 276,               /* T_INCLUDE  */
+    T_DEFINE = 277,                /* T_DEFINE  */
+    T_MAIS = 278,                  /* T_MAIS  */
+    T_MENOS = 279,                 /* T_MENOS  */
+    T_MULTI = 280,                 /* T_MULTI  */
+    T_DIV = 281,                   /* T_DIV  */
+    T_MOD = 282,                   /* T_MOD  */
+    T_IGUAL = 283,                 /* T_IGUAL  */
+    T_LE = 284,                    /* T_LE  */
+    T_ME = 285,                    /* T_ME  */
+    T_DIF = 286,                   /* T_DIF  */
+    T_M = 287,                     /* T_M  */
+    T_L = 288,                     /* T_L  */
+    T_INC = 289,                   /* T_INC  */
+    T_OR = 290,                    /* T_OR  */
+    T_AND = 291,                   /* T_AND  */
+    T_NOT = 292,                   /* T_NOT  */
+    T_ATRIBUICAO = 293,            /* T_ATRIBUICAO  */
+    T_ACHA = 294,                  /* T_ACHA  */
+    T_FCHA = 295,                  /* T_FCHA  */
+    T_ACOL = 296,                  /* T_ACOL  */
+    T_FCOL = 297,                  /* T_FCOL  */
+    T_APAR = 298,                  /* T_APAR  */
+    T_FPAR = 299,                  /* T_FPAR  */
+    T_PONTOVIRG = 300,             /* T_PONTOVIRG  */
+    T_VIRG = 301,                  /* T_VIRG  */
+    T_PONTO = 302                  /* T_PONTO  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 13 "sintatico.y"
+
+    int ival;     
+    double dval;  
+    char *sval;  
+
+#line 117 "sintatico.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -109,4 +142,4 @@ extern YYLTYPE yylloc;
 int yyparse (void);
 
 
-#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
+#endif /* !YY_YY_SINTATICO_TAB_H_INCLUDED  */

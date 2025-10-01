@@ -16,7 +16,10 @@ typedef enum
     STRING,
     CARACTERE,
     COMENTARIO,
-    MACROS
+    MACROS,
+    INCREMENTO,
+    SHL,
+    SHR
 } Classe;
 
 typedef struct no

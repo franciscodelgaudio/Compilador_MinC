@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lista.h"
-#include "parser.tab.h"
+#include "sintatico.tab.h"
 
 const char* ClasseParaString(Classe classe) {
     switch(classe) {
@@ -20,6 +20,9 @@ const char* ClasseParaString(Classe classe) {
         case CARACTERE: return "CARACTERE";
         case COMENTARIO: return "COMENTARIO";
         case MACROS: return "MACROS";
+        case INCREMENTO: return "INCREMENTO";
+        case SHL: return "SHL";
+        case SHR: return "SHR";
         default: return "DESCONHECIDO";
     }
 }
